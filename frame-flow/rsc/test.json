@@ -1,0 +1,82 @@
+{
+  "frames":[
+    {
+      "type": "request",
+      "name": "request_authentication",
+      "slots": [
+        {
+          "name": "full_name",
+          "required": true,
+          "dont_care": false
+        },
+        {
+          "name": "account_number",
+          "required": true,
+          "dont_care": false
+        },
+        {
+          "name": "pin",
+          "required": true,
+          "dont_care": false
+        }
+      ],
+      "next_frame": [
+        {
+          "frame": "query_authentication"
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "name": "query_authentication",
+      "next_frame": [
+        {
+          "condition": "success",
+          "frame": "inform_authentication_success"
+        },
+        {
+          "condition": "fail",
+          "frame": "inform_authentication_fail"
+        }
+      ]
+    },
+    {
+      "type": "inform",
+      "name": "inform_authentication_success",
+      "next_frame": [
+        {
+          "frame": "bye"
+        }
+      ]
+    },
+    {
+      "type": "inform",
+      "name": "inform_authentication_fail",
+      "next_frame": [
+        {
+          "frame": "bye"
+        }
+      ],
+      "message" : "Authentication Failed"
+    },
+    {
+      "type": "end",
+      "name": "bye",
+      "next_frame": [
+        {
+          "frame": null
+        }
+      ]
+    },
+    {
+      "type": "start",
+      "name": "hi",
+      "next_frame": [
+        {
+          "frame": "request_authentication"
+        }
+      ],
+      "message" : "Authentication Succeeded"
+    }
+  ]
+}
