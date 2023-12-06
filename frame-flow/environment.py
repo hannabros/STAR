@@ -1,5 +1,4 @@
 from typing import Dict, List, Optional, Union
-
 from frame import Frame, RequestFrame, QueryFrame, InformFrame, StartFrame, EndFrame
 from util.error_handler import *
 
@@ -8,6 +7,7 @@ class Environment():
     self.frames = frames
     self.frame_objs = []
     self.set_frame_objs()
+    self.validate_frame_objs()
     # self.set_frame_flow()
     self.current_frame = None
     self.dialogue_states = None
@@ -29,6 +29,18 @@ class Environment():
         raise NoFrameTypeError(frame['type'])
       self.frame_objs.append(frame_obj)
   
+  def validate_frame_objs(self):
+    for frame_obj in self.frame_objs:
+      if frame_obj.type != 'end':
+        next_frame = frame_obj.next_frame
+        next_frame_names = [frame['frame'] for frame in next_frame]
+        for name in next_frame_names:
+          try:
+            next_frame_obj = self._get_frame_obj_by_name(name)
+          except NoFrameObjError as e:
+            raise NextFrameNotValidError(frame_obj.name, name)
+
+
   def get_next_frame_obj(self, frame_obj: Frame, condition=None) -> Frame:
     next_frames = frame_obj.next_frame
     if len(next_frames) == 1:
@@ -46,13 +58,13 @@ class Environment():
     for frame_obj in self.frame_objs:
       if frame_obj.name == name:
         return frame_obj
-    return NoFrameObjError
+    raise NoFrameObjError(name)
       
   def _get_frame_obj_by_type(self, type: str) -> Frame:
     for frame_obj in self.frame_objs:
       if frame_obj.type == type:
         return frame_obj
-    return NoFrameObjError
+    raise NoFrameObjError(type)
 
   def init(self) -> None:
     init_frame_obj = self._get_frame_obj_by_type('start')

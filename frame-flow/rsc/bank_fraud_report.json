@@ -1,0 +1,215 @@
+{
+  "frames":[
+    {
+      "type": "request",
+      "name": "request_authentication1",
+      "initiator": "both",
+      "slots": [
+        {
+          "name": "full_name",
+          "required": true,
+          "dont_care": false,
+          "order": 1
+        },
+        {
+          "name": "account_number",
+          "required": true,
+          "dont_care": false,
+          "order": 2
+        },
+        {
+          "name": "pin",
+          "required": true,
+          "dont_care": false,
+          "order": 3
+        }
+      ],
+      "next_frame": [
+        {
+          "frame": "query_authentication1"
+        }
+      ]
+    },
+    {
+      "type": "request",
+      "name": "request_authentication2",
+      "initiator": "system",
+      "slots": [
+        {
+          "name": "full_name",
+          "required": true,
+          "dont_care": false,
+          "order": 1
+        },
+        {
+          "name": "date_of_birth",
+          "required": true,
+          "dont_care": false,
+          "order": 2
+        },
+        {
+          "name": "security_question_mother_name",
+          "required": true,
+          "dont_care": false,
+          "order": 3
+        }
+      ],
+      "next_frame": [
+        {
+          "frame": "query_authentication2"
+        }
+      ]
+    },
+    {
+      "type": "request",
+      "name": "request_authentication3",
+      "initiator": "system",
+      "slots": [
+        {
+          "name": "full_name",
+          "required": true,
+          "dont_care": false,
+          "order": 1
+        },
+        {
+          "name": "date_of_birth",
+          "required": true,
+          "dont_care": false,
+          "order": 2
+        },
+        {
+          "name": "security_question_childhood_pet_name",
+          "required": true,
+          "dont_care": false,
+          "order": 3
+        }
+      ],
+      "next_frame": [
+        {
+          "frame": "query_authentication3"
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "name": "query_authentication1",
+      "next_frame": [
+        {
+          "condition": "success",
+          "frame": "request_fraud_report"
+        },
+        {
+          "condition": "fail",
+          "frame": "request_authentication2"
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "name": "query_authentication2",
+      "next_frame": [
+        {
+          "condition": "success",
+          "frame": "request_fraud_report"
+        },
+        {
+          "condition": "fail",
+          "frame": "request_authentication3"
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "name": "query_authentication3",
+      "next_frame": [
+        {
+          "condition": "success",
+          "frame": "request_fraud_report"
+        },
+        {
+          "condition": "fail",
+          "frame": "inform_authentication_fail"
+        }
+      ]
+    },
+    {
+      "type": "request",
+      "name": "request_fraud_report",
+      "initiator": "system",
+      "slots": [
+        {
+          "name": "fraud_report",
+          "required": true,
+          "dont_care": false
+        }
+      ],
+      "next_frame": [
+        {
+          "frame": "query_fraud_report"
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "name": "query_fraud_report",
+      "next_frame": [
+        {
+          "condition": "success",
+          "frame": "inform_report_success"
+        },
+        {
+          "condition": "fail",
+          "frame": "inform_report_fail"
+        }
+      ]
+    },
+    {
+      "type": "inform",
+      "name": "inform_report_success",
+      "next_frame": [
+        {
+          "frame": "bye"
+        }
+      ],
+      "message" : "Informing a fraud report succeeded"
+    },
+    {
+      "type": "inform",
+      "name": "inform_report_fail",
+      "next_frame": [
+        {
+          "frame": "bye"
+        }
+      ],
+      "message" : "Informing a fraud report failed"
+    },
+    {
+      "type": "inform",
+      "name": "inform_authentication_fail",
+      "next_frame": [
+        {
+          "frame": "bye"
+        }
+      ],
+      "message" : "Authentication Failed"
+    },
+    {
+      "type": "end",
+      "name": "bye",
+      "next_frame": [
+        {
+          "frame": null
+        }
+      ]
+    },
+    {
+      "type": "start",
+      "name": "hi",
+      "next_frame": [
+        {
+          "frame": "request_authentication1"
+        }
+      ]
+    }
+  ]
+}

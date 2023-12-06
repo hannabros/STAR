@@ -14,7 +14,7 @@ def read_config(file_path: str) -> Dict:
 
 if __name__ == "__main__":
   # Example usage
-  config_file_path = './rsc/test.json'
+  config_file_path = './rsc/bank_fraud_report.json'
   config = read_config(config_file_path)
   frames = config['frames']
 
@@ -25,7 +25,7 @@ if __name__ == "__main__":
   env.init()
   assert env.current_frame.type == 'start'
   env.update()
-  
+
   das = []
   while not env.flow_finished:
     usr_da = usr_sim.get_da(env)
@@ -35,7 +35,8 @@ if __name__ == "__main__":
     sys_da = sys_sim.get_da(env)
     if sys_da:
       das.append(f'system: {sys_da}')
-    env.update()
+    if env.current_frame.type != 'end':
+      env.update()
 
     # print(env.current_frame.name)
 
